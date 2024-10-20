@@ -1,23 +1,20 @@
 const express = require('express')
 const app = express()
+app.use(express.json())
 
+const users = []
 
-app.get('/opa', (req, res, next) => {
-    res.json(
-        [
-            {"id": 7, "name":"João"},
-            {"id": 8, "name":"Vitor"}
-        ]
-    )
-
-    next()
+app.post('/usuarios', (req, res) => {
+    users.push(req.body)
+    console.log('usuario armazenado na variavel users!')
+    res.status(201).json(users)
 })
 
-app.use('/opa', (req, res, next) => {
-    
-    console.log('fui chamado!!!')
-    
+app.get('/usuarios', (req, res) => {
+    res.status(200).json(users)
+    console.log('listando todos os usuarios')
 })
-app.listen(3000, () => {
-    console.log('back-end rodando 3')
+
+app.listen(5000, () => {
+    console.log('backend funcionando!')
 })

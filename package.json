@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodemon",
-    "production":"pm2 start index.js --name app-backend-site-tcc"
+    "start": "nodemon index.js",
+    "production": "pm2 start index.js --name app-backend-site-tcc"
   },
   "keywords": [],
   "author": "",
