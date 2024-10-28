@@ -16,7 +16,7 @@ router.get('/', (req, res)=>{
 router.get('/usuarios', (req, res) => {
     // res.status(200).json(users)
 
-    userModel.findAll()
+    userModel.findAll(/*{where:{userEmail: "joao3@gmail.com"}}*/)
     .then(
         (response) => {
             return res.status(201).json(
@@ -40,7 +40,7 @@ router.get('/usuarios', (req, res) => {
     console.log('listando todos os usuarios')
 })
 
-router.post('/usuarios', (req, res)=>{
+router.post('/usuarios', async (req, res)=>{
     console.log('entrou no inserir usuarios')
     let { userName, userEmail, userPassword, userPasswordConfirm } = req.body;
 
@@ -50,15 +50,20 @@ router.post('/usuarios', (req, res)=>{
         validation.existsOrError(userPassword, "Senha não informada!")
         validation.existsOrError(userPasswordConfirm, "Confirmação de senha não informada!")
         validation.equalsOrError(userPassword, userPasswordConfirm, "As senhas devem ser iguais!")
+
+        const user = await userModel.findAll({where: {
+            userEmail: `${userEmail}`
+        }})
+        console.log(user)
+
+        validation.notExistsOrError(user, "Usuário já cadastrado")
+        
     }catch (msg){
         return res.status(400).send(msg)
     }
     
-    console.log(req.body)
     delete req.body.userPasswordConfirm
-    console.log(req.body)
 
-    
     userModel.create(
         {
             userName,
@@ -87,6 +92,31 @@ router.post('/usuarios', (req, res)=>{
     });
 
     // return res.status(200).json({status:'TESTE DE INSERÇÃO DE LIVRO!'});
+
+});
+
+
+router.get('/teste', async (req, res)=>{
+
+    let nomeTeste = "João vitor andrade"
+
+    const users = await userModel.findAll({where: {
+        userName: `${nomeTeste}`
+    }})
+    console.log(users.dataValues)
+    console.log(typeof(users))
+    console.log(users)
+
+    if(users.length > 0){
+        console.log("existe usuario")
+    }
+
+    try{
+        validation.notExistsOrError(users, "Usuário já cadastrado")
+    }catch (msg){
+        return res.status(400).send(msg)
+    }
+    return res.status(200).json({status:'TESTE DE CONEXÃO COM A API!'});
 
 });
 

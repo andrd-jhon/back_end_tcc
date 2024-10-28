@@ -7,12 +7,8 @@ const validation = {
     },
     
     notExistsOrError: (value, msg) => {
-        try {
-            existsOrError(value, msg)
-        }catch (msg) {
-            return
-        }
-        throw msg
+            if (value.length > 0) throw msg
+        
     },
     
     equalsOrError: (valueA, valueB, msg) => {
